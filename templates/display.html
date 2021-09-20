@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h2>{{ the_title }}</h2>
+
+<p>You submitted the following data:</p>
+<table>
+	<tr>
+		<td>Ticker:</td>
+		<td>{{ the_ticker }}</td>
+	</tr>
+</table>
+
+<p>Closing prices for {{ the_ticker }}</p>
+
+{% endblock %}
