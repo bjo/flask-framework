@@ -4,14 +4,14 @@ import pandas as pd
 import numpy as np
 import datetime as dt
 
+# Query daily time series for now, may expand this functionality to support diff. types of queries
+QUERY = 'TIME_SERIES_DAILY'
+REQ_URL = 'https://www.alphavantage.co/query'
+
 # putting this all together, we can finalize the search4ticker function
-def search4ticker(phrase: str = 'GOOG', start_date: str = '2019-12-21', end_date: str = '2021-03-19', APIKEY: str = '') -> dict:
+def search4ticker(ticker: str = 'GOOG', start_date: str = '2019-12-21', end_date: str = '2021-03-19', APIKEY: str = '') -> dict:
     """Return a dict of dates and prices."""
-    param_dict = {}
-    param_dict['symbol'] = phrase
-    param_dict['outputsize'] = 'full'
-    # Query daily time series for now
-    hist_data = api_query('TIME_SERIES_DAILY', param_dict, APIKEY)
+    hist_data = api_query(ticker, QUERY, APIKEY)
     # The returned index is 'Time Series (Daily)'
     hist_df = pd.DataFrame.from_dict(hist_data['Time Series (Daily)'], orient = 'index')
     hist_df['datetimes'] = [dt.datetime.strptime(date, '%Y-%m-%d') for date in hist_df.index]
@@ -28,15 +28,15 @@ def search4ticker(phrase: str = 'GOOG', start_date: str = '2019-12-21', end_date
     return query_result
 
 # query function
-def api_query(function, param_dict, api_key):
-    req_url = 'https://www.alphavantage.co/'
-    req_body = '/query?function='
-    req_body = req_body + function + '&'
-    param_dict['apikey'] = api_key
-    param_dict['datatype'] = 'json'
-    req_body = req_body + '&'.join([key+'='+param_dict[key] for key in param_dict])
-    
-    myResponse = requests.get(req_url + req_body)
+def api_query(ticker, query, api_key):
+    params = { 'function'   : QUERY, 
+               'outputsize' : 'full', 
+               'apikey'     : api_key,
+               'datatype'   : 'json',
+               'symbol'     : ticker}
+    headers = { 'user-agent'   : 'TDI' }
+
+    myResponse = requests.get(REQ_URL, params=params, headers=headers)
     # For successful API call, response code will be 200 (OK)
     if(myResponse.ok):
         # Loading the response data into a dict variable
