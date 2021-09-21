@@ -5,6 +5,7 @@
 from flask import Flask, render_template, request, redirect, escape
 # Needs to be in the same directory
 from tickerquery import *
+from plotdata import *
 
 # Create Flask webapp object
 app = Flask(__name__)
@@ -29,16 +30,23 @@ def entry_page() -> 'html':
 # now this url only allows for POST method
 @app.route('/display', methods = ['POST'])
 def do_search() -> 'html':
-  # return str(search4letters('life, the universe, and everything', 'eiru,!'))
   # let's use Flask's built-in object called 'request' and its dictionary attribute 'form'
   ticker = request.form['ticker']
-  results = str(search4ticker(ticker))
+  startdate = request.form['startdate']
+  enddate = request.form['enddate']
+  results = search4ticker(ticker, startdate, enddate)
   # results = str(search4ticker(ticker, letters))
   # invoke the log_request function:
   # log_request(request, results)
   # the display.html expects the_title and the_ticker fields - we'll provide them here
+  return_comps = return_plot_html(results)
+  plotjs = return_comps['script']
+  plotdiv = return_comps['div']
+  resources = return_comps['resources']
   return render_template('display.html',
-    the_title = 'Here are your results', the_ticker = ticker, the_results = results)
+    the_title = 'Here are your results', 
+    the_ticker = ticker, the_start_date = startdate, the_end_date = enddate,
+    the_resources = resources, the_data = plotjs, the_plot = plotdiv)
 
 # Makes this app run in http://127.0.0.1:33507/
 # app.run()
@@ -46,3 +54,4 @@ def do_search() -> 'html':
 # its own version of app.run()
 if __name__ == '__main__':
   app.run(port = 33507, debug = True)
+
