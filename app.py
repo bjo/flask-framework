@@ -2,7 +2,7 @@
 # render_template allows for rendering the HTML pages under /templates
 # request allows for, among other things, submission of forms via POST
 # redirect allows us redirect pages with code '302'
-from flask import Flask, render_template, request, redirect, escape
+from flask import Flask, render_template, request, redirect
 # Needs to be in the same directory
 from tickerquery import *
 from plotdata import *

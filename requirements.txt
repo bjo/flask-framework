@@ -5,4 +5,3 @@ jinja2
 numpy
 bokeh
 pandas
-python-dotenv
