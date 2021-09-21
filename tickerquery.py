@@ -3,14 +3,9 @@ import json
 import pandas as pd
 import numpy as np
 import datetime as dt
-# hide APIKEY for alphavantage
-from dotenv import dotenv_values
-
-config = dotenv_values(".env")
-APIKEY = config['APIKEY']
 
 # putting this all together, we can finalize the search4ticker function
-def search4ticker(phrase: str = 'GOOG', start_date: str = '2019-12-21', end_date: str = '2021-03-19') -> dict:
+def search4ticker(phrase: str = 'GOOG', start_date: str = '2019-12-21', end_date: str = '2021-03-19', APIKEY: str = '') -> dict:
     """Return a dict of dates and prices."""
     param_dict = {}
     param_dict['symbol'] = phrase

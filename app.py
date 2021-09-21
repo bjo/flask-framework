@@ -6,6 +6,8 @@ from flask import Flask, render_template, request, redirect, escape
 # Needs to be in the same directory
 from tickerquery import *
 from plotdata import *
+# hide APIKEY for alphavantage
+from dotenv import dotenv_values
 
 # Create Flask webapp object
 app = Flask(__name__)
@@ -34,7 +36,7 @@ def do_search() -> 'html':
   ticker = request.form['ticker']
   startdate = request.form['startdate']
   enddate = request.form['enddate']
-  results = search4ticker(ticker, startdate, enddate)
+  results = search4ticker(ticker, startdate, enddate, app.config.get('APIKEY'))
   # results = str(search4ticker(ticker, letters))
   # invoke the log_request function:
   # log_request(request, results)
@@ -53,5 +55,7 @@ def do_search() -> 'html':
 # If run locally, it will run in debug mode. Otherwise, the deployment will run
 # its own version of app.run()
 if __name__ == '__main__':
+  config = dotenv_values(".env")
+  app.config['APIKEY'] = config['APIKEY']
   app.run(port = 33507, debug = True)
 
