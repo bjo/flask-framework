@@ -1,3 +1,9 @@
 flask
 gunicorn
 requests
+jinja2
+numpy
+bokeh
+json
+pandas
+python-dotenv
